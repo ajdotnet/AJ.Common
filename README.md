@@ -1,0 +1,2 @@
+# AJ.Common
+Basic functionality
