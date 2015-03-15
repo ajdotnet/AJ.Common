@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 
 namespace AJ.Common
 {
@@ -12,9 +13,6 @@ namespace AJ.Common
     /// </summary>
     public static class Guard
     {
-        const string NULL_PARAM = "(no param)";
-        const string NULL_VALUE = "(null)";
-
         /// <summary>
         /// Checks if a given value is not null and throws a respective exception otherwise.
         /// </summary>
@@ -245,7 +243,8 @@ namespace AJ.Common
         static public void AssertCondition(bool condition, string paramName, object arg)
         {
             if (!condition)
-                ThrowArgumentOutOfRangeException(paramName, arg, "Condition not met!");
+                // Condition not met!
+                ThrowArgumentOutOfRangeException(paramName, arg, Properties.Resources.MsgConditionFailed);
         }
 
         /// <summary>
@@ -270,12 +269,13 @@ namespace AJ.Common
         {
             try
             {
-                return string.Format(format, args);
+                return string.Format(CultureInfo.CurrentCulture, format, args);
             }
             catch (Exception ex)
             {
-                return "Format failure: " + ex.Message + Environment.NewLine +
-                format + " with " + args.Length + " arguments.";
+                // Format failure:\n    Exception={0}\n    Format=\"{1}\"\n    args.Length={2}
+                return string.Format(CultureInfo.CurrentCulture, Properties.Resources.MsgInvalidFormatString,
+                    ex.Message, format, args.Length);
             }
         }
 
@@ -287,26 +287,26 @@ namespace AJ.Common
         [DebuggerStepThrough]
         public static void InvalidSwitchValue(string variable, object value)
         {
-            string msg = string.Format("Invalid switch value '{1}' for '{0}'.", variable ?? NULL_PARAM, value ?? NULL_VALUE);
+            // Invalid switch value '{1}' for '{0}'.
+            string msg = string.Format(CultureInfo.CurrentCulture, Properties.Resources.MsgInvalidSwitchValue,
+                variable ?? Properties.Resources.ValueNoParam, value ?? Properties.Resources.ValueNull);
             throw new InvalidOperationException(msg);
         }
 
         private static void ThrowArgumentNullException(string paramName, string message)
         {
             if (message == null)
-                message = "Argument ‘" + paramName ?? NULL_PARAM + "’ should not be NULL!";
-            throw new ArgumentNullException(paramName, message);
+                // Argument ‘{0}’ should not be NULL!
+                message = SafeFormat(Properties.Resources.MsgParamNull, paramName ?? Properties.Resources.ValueNoParam);
+            throw new ArgumentNullException(paramName ?? Properties.Resources.ValueNoParam, message);
         }
 
         private static void ThrowArgumentOutOfRangeException(string paramName, object actualValue, string message)
         {
             if (message == null)
-                message = "Argument ‘" + (paramName ?? NULL_PARAM) + "’ should not be empty!";
-#if SILVERLIGHT
-            throw new ArgumentOutOfRangeException(paramName, message);
-#else
-            throw new ArgumentOutOfRangeException(paramName, actualValue ?? NULL_VALUE, message);
-#endif
+                // Argument ‘{0}’ should not be empty!
+                message = SafeFormat(Properties.Resources.MsgParamEmpty, paramName ?? Properties.Resources.ValueNoParam);
+            throw new ArgumentOutOfRangeException(paramName ?? Properties.Resources.ValueNoParam, actualValue, message);
         }
 
         /// <summary>
