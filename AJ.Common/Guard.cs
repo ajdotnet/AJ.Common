@@ -1,4 +1,5 @@
-﻿using System;
+﻿// Source: https://github.com/ajdotnet/AJ.Common
+using System;
 using System.Collections;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
