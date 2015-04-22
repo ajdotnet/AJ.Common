@@ -248,21 +248,26 @@ namespace AJ.Common
         }
 
         /// <summary>
-        /// Helper method: Replaces <see cref="String.Format"/>.
-        /// 
-        /// Replaces each format item in a specified String with the text equivalent of 
-        /// a corresponding Object instance in a specified array. 
-        /// </summary
-        /// <remarks>
-        /// Contrary to <see cref="String.Format"/>, this method does not throw an exception.
+        ///   <para>
+        /// Helper method: Replaces <c>String.Format(string, object[] args)</c>.
+        ///   </para>
+        ///   <para>
+        /// Replaces each format item in a specified String with the text equivalent of
+        /// a corresponding Object instance in a specified array.
+        ///   </para>
+        ///   <para>
+        /// Contrary to <c>String.Format(string, object[] args)</c>, this method does not throw an exception.
         /// Rather in case of an error it returns a descriptive string describing that error.
         /// This is done to avoid having a subsequent string format error obscure the original
         /// error that caused this call in the first place.
-        /// </remarks>
+        ///   </para>
+        /// </summary>
         /// <param name="format">A composite format string.</param>
-        /// <param name="args">An Object array containing zero or more objects to format. </param>
-        /// <returns>A copy of format in which the format items have been replaced by the String 
-        /// equivalent of the corresponding instances of Object in args. </returns>
+        /// <param name="args">An Object array containing zero or more objects to format.</param>
+        /// <returns>
+        /// A copy of format in which the format items have been replaced by the String
+        /// equivalent of the corresponding instances of Object in args.
+        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
             Justification = "No exceptions during error handling!")]
         static string SafeFormat(string format, params object[] args)
